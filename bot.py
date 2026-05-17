@@ -12,8 +12,8 @@ from aiogram.types import (
 
 from config import (
     TOKEN,
-    CHANNEL,
     ADMIN_IDS,
+    CHANNEL,
     CARD_NUMBER,
     PAYMENT,
     SCRIPT_URL
@@ -22,7 +22,6 @@ from config import (
 import asyncio
 import requests
 import re
-
 
 bot = Bot(token=TOKEN)
 
@@ -81,7 +80,7 @@ def load_users():
         print(error)
 
 
-# ===== MENU =====
+# ===== USER MENU =====
 
 menu = ReplyKeyboardMarkup(
     keyboard=[
@@ -98,6 +97,25 @@ menu = ReplyKeyboardMarkup(
         [
             KeyboardButton(
                 text="📄 Mening IDlarim"
+            )
+        ]
+    ],
+    resize_keyboard=True
+)
+
+
+# ===== ADMIN MENU =====
+
+admin_menu = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(
+                text="📋 Ro‘yxatdan o‘tganlar"
+            )
+        ],
+        [
+            KeyboardButton(
+                text="✅ To‘lov tasdiqlanganlar"
             )
         ]
     ],
@@ -126,15 +144,16 @@ class CheckState(StatesGroup):
 
 
 # ===== START =====
+
 @dp.message(CommandStart())
 async def start(message: types.Message):
 
-    # ADMIN BO'LSA TO'G'RIDAN MENU
+    # ADMIN
     if message.from_user.id in ADMIN_IDS:
 
         await message.answer(
             "👋 Assalomu alaykum admin!",
-            reply_markup=menu
+            reply_markup=admin_menu
         )
 
         return
@@ -175,22 +194,13 @@ Mahorat Matematika Olimpiadasiga xush kelibsiz.
 
 
 # ===== CHECK SUB =====
-@dp.callback_query(lambda c: c.data == "check_sub")
-async def check_sub(callback: types.CallbackQuery):
 
-    # ADMIN BO'LSA TEKSHIRMAYDI
-    if callback.from_user.id in ADMIN_IDS:
-
-        await callback.message.edit_text(
-            "✅ Admin sifatida kirildi!"
-        )
-
-        await callback.message.answer(
-            "Kerakli bo‘limni tanlang:",
-            reply_markup=menu
-        )
-
-        return
+@dp.callback_query(
+    lambda c: c.data == "check_sub"
+)
+async def check_sub(
+    callback: types.CallbackQuery
+):
 
     try:
 
@@ -199,7 +209,10 @@ async def check_sub(callback: types.CallbackQuery):
             callback.from_user.id
         )
 
-        if member.status in ["left", "kicked"]:
+        if member.status in [
+            "left",
+            "kicked"
+        ]:
 
             await callback.answer(
                 "❌ Siz kanalga a'zo emassiz!",
@@ -227,6 +240,84 @@ async def check_sub(callback: types.CallbackQuery):
         "Kerakli bo‘limni tanlang:",
         reply_markup=menu
     )
+
+
+# ===== ADMIN USERS =====
+
+@dp.message(
+    lambda message:
+    message.text == "📋 Ro‘yxatdan o‘tganlar"
+)
+async def all_users(message: types.Message):
+
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    if len(users_data) == 0:
+
+        await message.answer(
+            "❌ Registratsiyalar yo‘q."
+        )
+
+        return
+
+    result = ""
+
+    for reg_id, data in users_data.items():
+
+        result += f"""
+🆔 {reg_id}
+
+👤 {data['fish']}
+📚 {data['sinf']}
+🏫 {data['maktab']}
+
+📞 {data['tel1']}
+📞 {data['tel2']}
+
+📌 {data['status']}
+
+====================
+"""
+
+    await message.answer(result)
+
+
+# ===== CONFIRMED USERS =====
+
+@dp.message(
+    lambda message:
+    message.text == "✅ To‘lov tasdiqlanganlar"
+)
+async def confirmed_users(message: types.Message):
+
+    if message.from_user.id not in ADMIN_IDS:
+        return
+
+    result = ""
+
+    for reg_id, data in users_data.items():
+
+        if data["status"] == "TOLOV TASDIQLANDI":
+
+            result += f"""
+🆔 {reg_id}
+
+👤 {data['fish']}
+📚 {data['sinf']}
+🏫 {data['maktab']}
+
+📞 {data['tel1']}
+
+====================
+"""
+
+    if result == "":
+
+        result = "❌ Tasdiqlanganlar yo‘q."
+
+    await message.answer(result)
+
 
 # ===== REGISTER START =====
 
@@ -623,35 +714,25 @@ async def receive_check(
 📞 {user['tel2']}
 """
 
-    if message.photo:
+    for admin_id in ADMIN_IDS:
 
-        for admin in ADMIN_IDS:
+        if message.photo:
 
             await bot.send_photo(
-                admin,
+                admin_id,
                 photo=message.photo[-1].file_id,
                 caption=text,
                 reply_markup=keyboard
             )
 
-    elif message.document:
-
-        for admin in ADMIN_IDS:
+        elif message.document:
 
             await bot.send_document(
-                admin,
+                admin_id,
                 document=message.document.file_id,
                 caption=text,
                 reply_markup=keyboard
             )
-
-    else:
-
-        await message.answer(
-            "❌ Rasm yoki fayl yuboring."
-        )
-
-        return
 
     await message.answer(
         "✅ Adminga yuborildi."

@@ -166,13 +166,22 @@ Mahorat Matematika Olimpiadasiga xush kelibsiz.
 
 
 # ===== CHECK SUB =====
+@dp.callback_query(lambda c: c.data == "check_sub")
+async def check_sub(callback: types.CallbackQuery):
 
-@dp.callback_query(
-    lambda c: c.data == "check_sub"
-)
-async def check_sub(
-    callback: types.CallbackQuery
-):
+    # ADMIN BO'LSA TEKSHIRMAYDI
+    if callback.from_user.id in ADMIN_IDS:
+
+        await callback.message.edit_text(
+            "✅ Admin sifatida kirildi!"
+        )
+
+        await callback.message.answer(
+            "Kerakli bo‘limni tanlang:",
+            reply_markup=menu
+        )
+
+        return
 
     try:
 
@@ -181,10 +190,7 @@ async def check_sub(
             callback.from_user.id
         )
 
-        if member.status in [
-            "left",
-            "kicked"
-        ]:
+        if member.status in ["left", "kicked"]:
 
             await callback.answer(
                 "❌ Siz kanalga a'zo emassiz!",
@@ -212,7 +218,6 @@ async def check_sub(
         "Kerakli bo‘limni tanlang:",
         reply_markup=menu
     )
-
 
 # ===== REGISTER START =====
 

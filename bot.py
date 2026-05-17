@@ -126,9 +126,18 @@ class CheckState(StatesGroup):
 
 
 # ===== START =====
-
 @dp.message(CommandStart())
 async def start(message: types.Message):
+
+    # ADMIN BO'LSA TO'G'RIDAN MENU
+    if message.from_user.id in ADMIN_IDS:
+
+        await message.answer(
+            "👋 Assalomu alaykum admin!",
+            reply_markup=menu
+        )
+
+        return
 
     text = """
 Assalomu alaykum!

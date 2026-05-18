@@ -827,10 +827,10 @@ async def accept_payment(
 
     telegram_user = user["telegram_user"]
 
-if telegram_user in referrals:
+    if telegram_user in referrals:
 
-    referrer_id = referrals[
-        telegram_user
+        referrer_id = referrals[
+            telegram_user
     ]
 
     for reg_id, ref_user in users_data.items():

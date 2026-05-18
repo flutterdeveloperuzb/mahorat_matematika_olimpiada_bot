@@ -130,8 +130,13 @@ async def referral_system(
     text = f"""
 🏆 Mahorat Matematika Olimpiadasiga qatnashing!
 
-🤖 Bot:
+🔗 Sizning referal linkingiz:
+
 {referral_link}
+
+📋 Agar "Do‘stga ulashish"
+ishlamasa, yuqoridagi linkni
+nusxalab do‘stlaringizga yuboring.
 
 📚 Matematika olimpiadasi
 📝 Online ro‘yxatdan o‘tish

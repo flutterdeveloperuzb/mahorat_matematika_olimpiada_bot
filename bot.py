@@ -1039,8 +1039,6 @@ async def receive_check(
     )
 
     await state.clear()
-
-
 # ===== ACCEPT =====
 
 @dp.callback_query(
@@ -1061,7 +1059,17 @@ async def accept_payment(
         return
 
     registration_id = callback.data.split("_")[1]
+
     load_users()
+
+    if registration_id not in users_data:
+
+        await callback.answer(
+            "❌ Registratsiya topilmadi!",
+            show_alert=True
+        )
+
+        return
 
     user = users_data[registration_id]
 
@@ -1069,38 +1077,71 @@ async def accept_payment(
 
     telegram_user = user["telegram_user"]
 
-    if telegram_user in referrals:
+    # ===== REFERRAL BONUS =====
 
-        referrer_id = referrals[telegram_user]
+    referrer_id = user.get(
+        "refer_id",
+        ""
+    )
+
+    if str(referrer_id) != "":
 
         for reg_id, ref_user in users_data.items():
 
-            if int(
-               ref_user["telegram_user"]
-            ) == int(referrer_id):
+            if str(
+                ref_user["telegram_user"]
+            ) == str(referrer_id):
 
-                ref_user["ref_bonus"] += 5000
-
-            try:
-
-                await bot.send_message(
-                    referrer_id,
-                    f"""🎉 Sizning taklifingiz orqali
-bir foydalanuvchi to‘lov qildi.
-
-💰 Siz 5000 so‘m bonusga ega bo‘ldingiz!
-
-🏦 Jami balans:
-{ref_user['ref_bonus']} so‘m
-
-💸 30 000 so‘m bo‘lganda
-pul yechib olishingiz mumkin."""
+                current_balance = int(
+                    ref_user.get(
+                        "balance",
+                        0
+                    )
                 )
 
-            except:
-                pass
+                current_balance += 5000
 
-            break
+                ref_user["balance"] = current_balance
+
+                try:
+
+                    await asyncio.to_thread(
+                        requests.post,
+                        SCRIPT_URL,
+                        json={
+                            "action": "update_referral",
+                            "telegram_user": referrer_id
+                        },
+                        timeout=10
+                    )
+
+                except Exception as error:
+                    print(error)
+
+                try:
+
+                    await bot.send_message(
+                        referrer_id,
+                        f"""
+🎉 Sizning taklifingiz orqali
+bir foydalanuvchi to‘lov qildi!
+
+💰 Sizga 5000 so‘m bonus yozildi.
+
+🏦 Jami balans:
+{current_balance} so‘m
+
+💸 30 000 so‘m bo‘lganda
+pul yechib olishingiz mumkin.
+"""
+                    )
+
+                except:
+                    pass
+
+                break
+
+    # ===== UPDATE STATUS =====
 
     try:
 
@@ -1121,8 +1162,10 @@ pul yechib olishingiz mumkin."""
         reply_markup=None
     )
 
+    # ===== SEND USER MESSAGE =====
+
     await bot.send_message(
-        user["telegram_user"],
+        telegram_user,
         f"""
 ✅ To‘lov tasdiqlandi!
 
@@ -1156,7 +1199,7 @@ o‘z vaqtida kelishingizni so‘raymiz.
     )
 
     await callback.answer(
-        "Tasdiqlandi!"
+        "✅ Tasdiqlandi!"
     )
 
 

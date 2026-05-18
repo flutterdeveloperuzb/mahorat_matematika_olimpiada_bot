@@ -1024,17 +1024,15 @@ async def accept_payment(
 
     if telegram_user in referrals:
 
-        referrer_id = referrals[
-            telegram_user
-    ]
+        referrer_id = referrals[telegram_user]
 
-    for reg_id, ref_user in users_data.items():
+        for reg_id, ref_user in users_data.items():
 
-        if int(
-            ref_user["telegram_user"]
-        ) == int(referrer_id):
+            if int(
+               ref_user["telegram_user"]
+            ) == int(referrer_id):
 
-            ref_user["ref_bonus"] += 5000
+                ref_user["ref_bonus"] += 5000
 
             try:
 

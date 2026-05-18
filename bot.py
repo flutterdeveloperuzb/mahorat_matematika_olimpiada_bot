@@ -7,7 +7,8 @@ from aiogram.types import (
     ReplyKeyboardMarkup,
     KeyboardButton,
     InlineKeyboardMarkup,
-    InlineKeyboardButton
+    InlineKeyboardButton,
+    ReplyKeyboardRemove
 )
 
 from config import (
@@ -30,6 +31,7 @@ dp = Dispatcher(storage=MemoryStorage())
 registration_counter = 1
 
 users_data = {}
+referrals = {}
 
 
 # ===== LOAD LAST ID =====
@@ -400,6 +402,7 @@ async def confirmed_users(message: types.Message):
 
 
 # ===== REGISTER START =====
+# ===== REGISTER START =====
 
 @dp.message(
     lambda message:
@@ -411,13 +414,17 @@ async def register_start(
 ):
 
     await message.answer(
-        "👤 F.I.SH kiriting:"
+        """
+👤 F.I.SH kiriting:
+
+✍️ Misol:
+Ilyosjon Inamov
+"""
     )
 
     await state.set_state(
         RegisterState.fish
     )
-
 
 # ===== MY IDS =====
 
@@ -533,7 +540,6 @@ Chekni yuboring.
         CheckState.waiting_check
     )
 
-
 # ===== FISH =====
 
 @dp.message(RegisterState.fish)
@@ -545,7 +551,12 @@ async def get_fish(
     if len(message.text) < 5:
 
         await message.answer(
-            "❌ F.I.SH noto‘g‘ri."
+            """
+❌ F.I.SH noto‘g‘ri.
+
+✍️ Misol:
+Ilyosjon Inamov
+"""
         )
 
         return
@@ -554,8 +565,31 @@ async def get_fish(
         fish=message.text
     )
 
+    sinf_keyboard = ReplyKeyboardMarkup(
+        keyboard=[
+            [
+                KeyboardButton(text="5-sinf"),
+                KeyboardButton(text="6-sinf")
+            ],
+            [
+                KeyboardButton(text="7-sinf"),
+                KeyboardButton(text="8-sinf")
+            ],
+            [
+                KeyboardButton(text="9-sinf"),
+                KeyboardButton(text="10-sinf")
+            ],
+            [
+                KeyboardButton(text="11-sinf")
+            ]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+
     await message.answer(
-        "📚 Sinfingiz:"
+        "📚 Sinfni tanlang:",
+        reply_markup=sinf_keyboard
     )
 
     await state.set_state(
@@ -571,14 +605,20 @@ async def get_sinf(
     state: FSMContext
 ):
 
-    if message.text not in [
-        "1", "2", "3", "4", "5",
-        "6", "7", "8", "9",
-        "10", "11"
-    ]:
+    allowed_classes = [
+        "5-sinf",
+        "6-sinf",
+        "7-sinf",
+        "8-sinf",
+        "9-sinf",
+        "10-sinf",
+        "11-sinf"
+    ]
+
+    if message.text not in allowed_classes:
 
         await message.answer(
-            "❌ Sinfni to‘g‘ri kiriting."
+            "❌ Tugmalardan birini tanlang."
         )
 
         return
@@ -588,7 +628,13 @@ async def get_sinf(
     )
 
     await message.answer(
-        "📞 1-telefon:\n\n+998901234567"
+        """
+📞 1-telefon raqami:
+
+✍️ Misol:
++998901234567
+""",
+        reply_markup=ReplyKeyboardRemove()
     )
 
     await state.set_state(
@@ -612,7 +658,12 @@ async def get_tel1(
     ):
 
         await message.answer(
-            "❌ Telefon noto‘g‘ri."
+            """
+❌ Telefon noto‘g‘ri.
+
+✍️ Misol:
++998901234567
+"""
         )
 
         return
@@ -622,7 +673,12 @@ async def get_tel1(
     )
 
     await message.answer(
-        "📞 2-telefon:\n\n+998901234567"
+        """
+📞 2-telefon raqami:
+
+✍️ Misol:
++998901234567
+"""
     )
 
     await state.set_state(
@@ -646,7 +702,12 @@ async def get_tel2(
     ):
 
         await message.answer(
-            "❌ Telefon noto‘g‘ri."
+            """
+❌ Telefon noto‘g‘ri.
+
+✍️ Misol:
++998901234567
+"""
         )
 
         return
@@ -656,7 +717,12 @@ async def get_tel2(
     )
 
     await message.answer(
-        "🏫 Maktab nomi:"
+        """
+🏫 Maktab nomini kiriting:
+
+✍️ Misol:
+12-maktab
+"""
     )
 
     await state.set_state(
@@ -677,7 +743,12 @@ async def get_maktab(
     if len(message.text) < 3:
 
         await message.answer(
-            "❌ Maktab nomi noto‘g‘ri."
+            """
+❌ Maktab nomi noto‘g‘ri.
+
+✍️ Misol:
+12-maktab
+"""
         )
 
         return

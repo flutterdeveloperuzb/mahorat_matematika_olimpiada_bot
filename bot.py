@@ -141,7 +141,22 @@ to‘lov qilsa sizga 5000 so‘m bonus yoziladi.
 30 000 so‘m
 """
 
-    await message.answer(text)
+    share_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="📤 Do‘stga ulashish",
+                url=f"https://t.me/share/url?url={referral_link}"
+            )
+        ]
+    ]
+)
+
+    await message.answer(
+        text,
+        reply_markup=share_keyboard,
+        disable_web_page_preview=True
+)
 
 # ===== ADMIN MENU =====
 
@@ -691,7 +706,7 @@ async def get_maktab(
         "maktab": data["maktab"],
 
         "status": "KUTILMOQDA",
-        
+
         "ref_bonus": 0
     }
 
@@ -850,16 +865,16 @@ async def accept_payment(
 
                 await bot.send_message(
                     referrer_id,
-                    f"""
-🎉 Sizning taklifingiz orqali
+                    f"""🎉 Sizning taklifingiz orqali
 bir foydalanuvchi to‘lov qildi.
 
-💰 Bonus:
-5000 so‘m
+💰 Siz 5000 so‘m bonusga ega bo‘ldingiz!
 
 🏦 Jami balans:
 {ref_user['ref_bonus']} so‘m
-"""
+
+💸 30 000 so‘m bo‘lganda
+pul yechib olishingiz mumkin."""
                 )
 
             except:

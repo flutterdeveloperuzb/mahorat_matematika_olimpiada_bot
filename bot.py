@@ -566,26 +566,34 @@ Ilyosjon Inamov
     )
 
     sinf_keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                KeyboardButton(text="5-sinf"),
-                KeyboardButton(text="6-sinf")
-            ],
-            [
-                KeyboardButton(text="7-sinf"),
-                KeyboardButton(text="8-sinf")
-            ],
-            [
-                KeyboardButton(text="9-sinf"),
-                KeyboardButton(text="10-sinf")
-            ],
-            [
-                KeyboardButton(text="11-sinf")
-            ]
+    keyboard=[
+        [
+            KeyboardButton(text="1-sinf"),
+            KeyboardButton(text="2-sinf")
         ],
-        resize_keyboard=True,
-        one_time_keyboard=True
-    )
+        [
+            KeyboardButton(text="3-sinf"),
+            KeyboardButton(text="4-sinf")
+        ],
+        [
+            KeyboardButton(text="5-sinf"),
+            KeyboardButton(text="6-sinf")
+        ],
+        [
+            KeyboardButton(text="7-sinf"),
+            KeyboardButton(text="8-sinf")
+        ],
+        [
+            KeyboardButton(text="9-sinf"),
+            KeyboardButton(text="10-sinf")
+        ],
+        [
+            KeyboardButton(text="11-sinf")
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
 
     await message.answer(
         "📚 Sinfni tanlang:",
@@ -606,6 +614,10 @@ async def get_sinf(
 ):
 
     allowed_classes = [
+        "1-sinf",
+        "2-sinf",
+        "3-sinf",
+        "4-sinf",
         "5-sinf",
         "6-sinf",
         "7-sinf",
@@ -786,7 +798,8 @@ async def get_maktab(
 
     try:
 
-        requests.post(
+        await asyncio.to_thread(
+            requests.post,
             SCRIPT_URL,
             json={
                 "id": registration_id,
@@ -988,7 +1001,8 @@ pul yechib olishingiz mumkin."""
 
     try:
 
-        requests.post(
+        await asyncio.to_thread(
+            requests.post,
             SCRIPT_URL,
             json={
                 "action": "update_status",

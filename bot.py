@@ -98,6 +98,11 @@ menu = ReplyKeyboardMarkup(
             KeyboardButton(
                 text="📄 Mening IDlarim"
             )
+        ],
+        [
+            KeyboardButton(
+                text="👥 Do‘st taklif qilish"
+            )
         ]
     ],
     resize_keyboard=True

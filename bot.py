@@ -105,11 +105,38 @@ menu = ReplyKeyboardMarkup(
             KeyboardButton(
                 text="👥 Do‘st taklif qilish"
             )
-        ]
+        ],
+        [
+            KeyboardButton(
+                text="☎️ Admin bilan bog‘lanish"
+            )
+]
     ],
     resize_keyboard=True
 )
 
+
+# ===== CONTACT ADMIN =====
+
+@dp.message(
+    lambda message:
+    message.text == "☎️ Admin bilan bog‘lanish"
+)
+async def contact_admin(
+    message: types.Message
+):
+
+    await message.answer(
+        """
+☎️ Admin bilan bog‘lanish
+
+👨‍💼 Admin:
+Bilolxon
+
+📞 Telefon:
++998913515450
+"""
+    )
 
 # ===== REFERRAL SYSTEM =====
 
@@ -483,7 +510,6 @@ Ilyosjon Inamov
     await state.set_state(
         RegisterState.fish
     )
-
 # ===== MY IDS =====
 
 @dp.message(
@@ -500,18 +526,38 @@ async def my_ids(message: types.Message):
 
         if int(data["telegram_user"]) == telegram_id:
 
+            status_text = (
+                "🟢 TO‘LOV TASDIQLANGAN"
+                if data["status"] == "TOLOV TASDIQLANDI"
+                else "🟡 TO‘LOV KUTILMOQDA"
+            )
+
             result += f"""
-🆔 {reg_id}
+━━━━━━━━━━━━━━━
 
-👤 {data['fish']}
+🆔 ID:
+{reg_id}
 
-📌 {data['status']}
+👤 Ishtirokchi:
+{data['fish']}
 
+📚 Sinf:
+{data['sinf']}
+
+🏫 Maktab:
+{data['maktab']}
+
+📌 Holat:
+{status_text}
+
+━━━━━━━━━━━━━━━
 """
 
     if result == "":
 
-        result = "❌ Registratsiyalar topilmadi."
+        result = """
+❌ Siz hali ro‘yxatdan o‘tmagansiz.
+"""
 
     await message.answer(result)
 
@@ -1015,6 +1061,7 @@ async def accept_payment(
         return
 
     registration_id = callback.data.split("_")[1]
+    load_users()
 
     user = users_data[registration_id]
 

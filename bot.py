@@ -109,6 +109,40 @@ menu = ReplyKeyboardMarkup(
 )
 
 
+
+@dp.message(
+    lambda message:
+    message.text == "👥 Do‘st taklif qilish"
+)
+async def referral_system(
+    message: types.Message
+):
+
+    user_id = message.from_user.id
+
+    bot_info = await bot.get_me()
+
+    referral_link = (
+        f"https://t.me/{bot_info.username}"
+        f"?start=ref_{user_id}"
+    )
+
+    text = f"""
+👥 Referal tizimi
+
+Sizning maxsus linkingiz:
+
+{referral_link}
+
+Agar do‘stingiz shu link orqali kirib,
+to‘lov qilsa sizga 5000 so‘m bonus yoziladi.
+
+💰 Minimum yechish:
+30 000 so‘m
+"""
+
+    await message.answer(text)
+
 # ===== ADMIN MENU =====
 
 admin_menu = ReplyKeyboardMarkup(
@@ -151,7 +185,9 @@ class CheckState(StatesGroup):
 # ===== START =====
 
 @dp.message(CommandStart())
-async def start(message: types.Message):
+async def start(
+    message: types.Message
+):
 
     # ADMIN
     if message.from_user.id in ADMIN_IDS:

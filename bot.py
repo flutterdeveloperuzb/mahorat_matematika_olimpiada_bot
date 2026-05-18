@@ -198,8 +198,26 @@ async def start(
         )
 
         return
+args = message.text.split()
 
+if len(args) > 1:
+
+    ref_data = args[1]
+
+    if ref_data.startswith("ref_"):
+
+        referrer_id = ref_data.replace(
+            "ref_",
+            ""
+        )
+
+        if str(message.from_user.id) != referrer_id:
+
+            referrals[
+                message.from_user.id
+            ] = int(referrer_id)
     text = """
+    
 Assalomu alaykum!
 
 Mahorat Matematika Olimpiadasiga xush kelibsiz.
@@ -806,6 +824,43 @@ async def accept_payment(
     user = users_data[registration_id]
 
     user["status"] = "TOLOV TASDIQLANDI"
+
+    telegram_user = user["telegram_user"]
+
+if telegram_user in referrals:
+
+    referrer_id = referrals[
+        telegram_user
+    ]
+
+    for reg_id, ref_user in users_data.items():
+
+        if int(
+            ref_user["telegram_user"]
+        ) == int(referrer_id):
+
+            ref_user["ref_bonus"] += 5000
+
+            try:
+
+                await bot.send_message(
+                    referrer_id,
+                    f"""
+🎉 Sizning taklifingiz orqali
+bir foydalanuvchi to‘lov qildi.
+
+💰 Bonus:
+5000 so‘m
+
+🏦 Jami balans:
+{ref_user['ref_bonus']} so‘m
+"""
+                )
+
+            except:
+                pass
+
+            break
 
     try:
 

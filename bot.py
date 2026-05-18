@@ -932,12 +932,34 @@ pul yechib olishingiz mumkin."""
     await bot.send_message(
         user["telegram_user"],
         f"""
-✅ To‘lov tasdiqlandi
+✅ To‘lov tasdiqlandi!
 
-🆔 {registration_id}
+🆔 ID:
+{registration_id}
 
-🕘 Olimpiada:
-Yakshanba 09:00
+👨‍🎓 Ishtirokchi:
+{user['fish']}
+
+━━━━━━━━━━━━━━━
+
+🏆 OLIMPIADA MA’LUMOTI
+
+📅 Sana:
+06.06.2026
+
+🕣 Boshlanish vaqti:
+08:30
+
+📍 Manzil:
+Mahorat Maktabi
+
+📌 Mo‘ljal:
+Turon Universiteti tepasi
+
+━━━━━━━━━━━━━━━
+
+📚 Olimpiadaga
+o‘z vaqtida kelishingizni so‘raymiz.
 """
     )
 

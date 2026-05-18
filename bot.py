@@ -146,7 +146,7 @@ to‘lov qilsa sizga 5000 so‘m bonus yoziladi.
         [
             InlineKeyboardButton(
                 text="📤 Do‘stga ulashish",
-                url=f"https://t.me/share/url?url={referral_link}&text=🏆 Mahorat Matematika Olimpiadasiga qatnashing!"
+                url=f"https://t.me/share/url?url={referral_link}&text=Mahorat+Matematika+Olimpiadasiga+qatnashing"
             )
         ]
     ]

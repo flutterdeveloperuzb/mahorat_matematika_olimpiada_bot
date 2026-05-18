@@ -128,17 +128,14 @@ async def referral_system(
     )
 
     text = f"""
-👥 Referal tizimi
+🏆 Mahorat Matematika Olimpiadasiga qatnashing!
 
-Sizning maxsus linkingiz:
-
+🤖 Bot:
 {referral_link}
 
-Agar do‘stingiz shu link orqali kirib,
-to‘lov qilsa sizga 5000 so‘m bonus yoziladi.
-
-💰 Minimum yechish:
-30 000 so‘m
+📚 Matematika olimpiadasi
+📝 Online ro‘yxatdan o‘tish
+🎁 Referal bonuslar mavjud
 """
 
     share_keyboard = InlineKeyboardMarkup(

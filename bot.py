@@ -730,21 +730,51 @@ async def get_maktab(
         print(error)
 
     await message.answer(
-        f"""
-✅ Registratsiya qilindi
+    f"""
+✅ Registratsiya muvaffaqiyatli yakunlandi!
 
-🆔 {registration_id}
+━━━━━━━━━━━━━━━
 
-💳 To‘lov:
-{PAYMENT}
+👤 ISHTIROKCHI
 
-💳 Karta:
-{CARD_NUMBER}
+🆔 ID:
+{registration_id}
 
-Chek yuborish tugmasidan foydalaning.
+👨‍🎓 F.I.SH:
+{data['fish']}
+
+📚 Sinf:
+{data['sinf']}
+
+🏫 Maktab:
+{data['maktab']}
+
+📱 1-telefon:
+{data['tel1']}
+
+📱 2-telefon:
+{data['tel2']}
+
+━━━━━━━━━━━━━━━
+
+💰 50 000 so‘m to‘lovni
+quyidagi kartaga o‘tkazing:
+
+💳 9860 0401 1490 7971
+
+👤 Bilolxon M
+
+━━━━━━━━━━━━━━━
+
+📤 To‘lovdan so‘ng
+"💳 Chek yuborish"
+tugmasi orqali chekni yuboring.
+
+📌 Holat:
+KUTILMOQDA
 """,
-        reply_markup=menu
-    )
+    reply_markup=menu
+)
 
     await state.clear()
 

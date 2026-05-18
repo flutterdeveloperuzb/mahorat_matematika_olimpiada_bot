@@ -109,6 +109,7 @@ menu = ReplyKeyboardMarkup(
 )
 
 
+# ===== REFERRAL SYSTEM =====
 
 @dp.message(
     lambda message:
@@ -144,20 +145,21 @@ nusxalab do‘stlaringizga yuboring.
 """
 
     share_keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(
-                text="📤 Do‘stga ulashish",
-                url=f"https://t.me/share/url?url={referral_link}&text=Mahorat+Matematika+Olimpiadasiga+qatnashing"
-            )
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="📤 Do‘stga ulashish",
+                    url=f"https://t.me/share/url?url={referral_link}"
+                )
+            ]
         ]
-    ]
-)
+    )
 
     await message.answer(
         text,
         reply_markup=share_keyboard
-)
+    )
+
 
 # ===== ADMIN MENU =====
 
@@ -199,6 +201,7 @@ class CheckState(StatesGroup):
 
 
 # ===== START =====
+
 @dp.message(CommandStart())
 async def start(
     message: types.Message
@@ -237,7 +240,6 @@ async def start(
                 ] = int(referrer_id)
 
     text = """
-
 Assalomu alaykum!
 
 Mahorat Matematika Olimpiadasiga xush kelibsiz.
@@ -270,6 +272,7 @@ Mahorat Matematika Olimpiadasiga xush kelibsiz.
         text,
         reply_markup=keyboard
     )
+
 
 # ===== CHECK SUB =====
 
@@ -318,7 +321,6 @@ async def check_sub(
         "Kerakli bo‘limni tanlang:",
         reply_markup=menu
     )
-
 
 # ===== ADMIN USERS =====
 

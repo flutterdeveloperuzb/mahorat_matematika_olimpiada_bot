@@ -183,13 +183,13 @@ class CheckState(StatesGroup):
 
 
 # ===== START =====
-
 @dp.message(CommandStart())
 async def start(
     message: types.Message
 ):
 
-    # ADMIN
+    # ===== ADMIN =====
+
     if message.from_user.id in ADMIN_IDS:
 
         await message.answer(
@@ -198,26 +198,30 @@ async def start(
         )
 
         return
-args = message.text.split()
 
-if len(args) > 1:
+    # ===== REFERRAL =====
 
-    ref_data = args[1]
+    args = message.text.split()
 
-    if ref_data.startswith("ref_"):
+    if len(args) > 1:
 
-        referrer_id = ref_data.replace(
-            "ref_",
-            ""
-        )
+        ref_data = args[1]
 
-        if str(message.from_user.id) != referrer_id:
+        if ref_data.startswith("ref_"):
 
-            referrals[
-                message.from_user.id
-            ] = int(referrer_id)
+            referrer_id = ref_data.replace(
+                "ref_",
+                ""
+            )
+
+            if str(message.from_user.id) != referrer_id:
+
+                referrals[
+                    message.from_user.id
+                ] = int(referrer_id)
+
     text = """
-    
+
 Assalomu alaykum!
 
 Mahorat Matematika Olimpiadasiga xush kelibsiz.
@@ -250,7 +254,6 @@ Mahorat Matematika Olimpiadasiga xush kelibsiz.
         text,
         reply_markup=keyboard
     )
-
 
 # ===== CHECK SUB =====
 
@@ -687,7 +690,9 @@ async def get_maktab(
 
         "maktab": data["maktab"],
 
-        "status": "KUTILMOQDA"
+        "status": "KUTILMOQDA",
+        
+        "ref_bonus": 0
     }
 
     try:

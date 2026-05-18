@@ -154,8 +154,7 @@ to‘lov qilsa sizga 5000 so‘m bonus yoziladi.
 
     await message.answer(
         text,
-        reply_markup=share_keyboard,
-        disable_web_page_preview=True
+        reply_markup=share_keyboard
 )
 
 # ===== ADMIN MENU =====

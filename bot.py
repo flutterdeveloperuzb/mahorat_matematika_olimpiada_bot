@@ -912,7 +912,12 @@ async def get_maktab(
                 "sinf": data["sinf"],
                 "tel1": data["tel1"],
                 "tel2": data["tel2"],
-                "maktab": data["maktab"]
+                "maktab": data["maktab"],
+                
+                "refer_id": referrals.get(
+                message.from_user.id,
+                    ""
+                ),
             },
             timeout=10
         )

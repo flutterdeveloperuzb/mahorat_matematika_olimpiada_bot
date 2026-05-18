@@ -242,9 +242,39 @@ async def start(
                 ] = int(referrer_id)
 
     text = """
-Assalomu alaykum!
+🏆 Mahorat Matematika Olimpiadasiga xush kelibsiz!
 
-Mahorat Matematika Olimpiadasiga xush kelibsiz.
+📅 Olimpiada sanasi:
+06.06.2026
+
+🕣 Boshlanish vaqti:
+08:30
+
+🏫 Manzil:
+Mahorat Maktabi
+
+📍 Mo‘ljal:
+Turon Universiteti tepasi
+
+💰 Ishtirok narxi:
+50 000 so‘m
+
+━━━━━━━━━━━━━━━
+
+📚 Ushbu bot orqali siz:
+
+✅ Olimpiadaga ro‘yxatdan o‘tasiz
+✅ To‘lov chekini yuborasiz
+✅ Referal havola orqali do‘stlarni taklif qilasiz
+✅ Har bir tasdiqlangan do‘st uchun 5000 so‘m bonus olasiz
+✅ Bonus 30 000 so‘mga yetganda yechib olasiz
+✅ Natijalarni kuzatasiz
+
+━━━━━━━━━━━━━━━
+
+📌 Botdan foydalanish uchun
+quyidagi kanallarga a’zo bo‘ling
+va "✅ Tekshirish" tugmasini bosing.
 """
 
     keyboard = InlineKeyboardMarkup(
@@ -316,8 +346,36 @@ async def check_sub(
         return
 
     await callback.message.edit_text(
-        "✅ Obuna tasdiqlandi!"
-    )
+    """
+✅ Obuna tasdiqlandi!
+
+🏆 Mahorat Matematika Olimpiadasiga
+xush kelibsiz!
+
+📅 Olimpiada sanasi:
+06.06.2026
+
+🕣 Boshlanish vaqti:
+08:30
+
+🏫 Manzil:
+Mahorat Maktabi
+
+📍 Mo‘ljal:
+Turon Universiteti tepasi
+
+💰 Ishtirok narxi:
+50 000 so‘m
+
+📚 Bot orqali:
+• Ro‘yxatdan o‘tasiz
+• To‘lov chekini yuborasiz
+• Referal bonus yig‘asiz
+• Natijalarni kuzatasiz
+
+👇 Endi kerakli bo‘limni tanlang:
+"""
+)
 
     await callback.message.answer(
         "Kerakli bo‘limni tanlang:",

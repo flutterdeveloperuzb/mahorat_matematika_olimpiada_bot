@@ -1374,7 +1374,6 @@ o‘z vaqtida kelishingizni so‘raymiz.
         "✅ Tasdiqlandi!"
     )
 
-
 # ===== REJECT =====
 
 @dp.callback_query(
@@ -1395,6 +1394,17 @@ async def reject_payment(
         return
 
     registration_id = callback.data.split("_")[1]
+
+    load_users()
+
+    if registration_id not in users_data:
+
+        await callback.answer(
+            "❌ Registratsiya topilmadi!",
+            show_alert=True
+        )
+
+        return
 
     user = users_data[registration_id]
 
@@ -1418,7 +1428,6 @@ Iltimos chekni qayta yuboring.
     await callback.answer(
         "Bekor qilindi!"
     )
-
 
 # ===== WITHDRAW ACCEPT =====
 

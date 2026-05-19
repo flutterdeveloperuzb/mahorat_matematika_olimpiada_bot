@@ -108,6 +108,11 @@ menu = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(
+                text="💸 Pul yechish"
+                ),
+        ],
+        [
+            KeyboardButton(
                 text="☎️ Admin bilan bog‘lanish"
             )
 ]
@@ -227,6 +232,159 @@ class RegisterState(StatesGroup):
 class CheckState(StatesGroup):
 
     waiting_check = State()
+
+class WithdrawState(StatesGroup):
+
+    karta = State()
+
+# ===== WITHDRAW START =====
+
+@dp.message(
+    lambda message:
+    message.text == "💸 Pul yechish"
+)
+async def withdraw_start(
+    message: types.Message,
+    state: FSMContext
+):
+
+    load_users()
+
+    telegram_id = message.from_user.id
+
+    current_user = None
+
+    for reg_id, user in users_data.items():
+
+        if int(user["telegram_user"]) == telegram_id:
+
+            current_user = user
+            break
+
+    if current_user is None:
+
+        await message.answer(
+            "❌ Siz ro‘yxatdan o‘tmagansiz."
+        )
+
+        return
+
+    balance = int(
+        current_user.get(
+            "balance",
+            0
+        )
+    )
+
+    if balance < 30000:
+
+        await message.answer(
+            f"""
+❌ Minimal yechish summasi:
+
+30 000 so‘m
+
+💰 Sizning balans:
+{balance} so‘m
+"""
+        )
+
+        return
+
+    await message.answer(
+        """
+💳 Pul tushadigan karta raqamingizni yuboring:
+
+📌 Misol:
+9860123412341234
+"""
+    )
+
+    await state.set_state(
+        WithdrawState.karta
+    )
+
+
+# ===== RECEIVE CARD =====
+
+@dp.message(WithdrawState.karta)
+async def receive_card(
+    message: types.Message,
+    state: FSMContext
+):
+
+    card = message.text.replace(
+        " ",
+        ""
+    )
+
+    if not (
+        card.isdigit()
+        and
+        len(card) == 16
+    ):
+
+        await message.answer(
+            "❌ Karta noto‘g‘ri."
+        )
+
+        return
+
+    load_users()
+
+    telegram_id = message.from_user.id
+
+    for reg_id, user in users_data.items():
+
+        if int(user["telegram_user"]) == telegram_id:
+
+            balance = int(
+                user.get(
+                    "balance",
+                    0
+                )
+            )
+
+            for admin_id in ADMIN_IDS:
+
+                await bot.send_message(
+                    admin_id,
+                    f"""
+💸 PUL YECHISH SO‘ROVI
+
+👤 {user['fish']}
+
+🆔 {reg_id}
+
+💰 Balans:
+{balance} so‘m
+
+💳 Karta:
+{card}
+""",
+                    reply_markup=InlineKeyboardMarkup(
+                        inline_keyboard=[
+                            [
+                                InlineKeyboardButton(
+                                    text="✅ To‘landi",
+                                    callback_data=f"withdraw_accept_{reg_id}"
+                                )
+                            ]
+                        ]
+                    )
+                )
+
+            await message.answer(
+                """
+✅ So‘rov adminga yuborildi.
+
+📌 Tez orada tekshiriladi.
+"""
+            )
+
+            break
+
+    await state.clear()
 
 
 # ===== START =====
@@ -1078,6 +1236,15 @@ async def accept_payment(
 
     user = users_data[registration_id]
 
+    if user["status"] == "TOLOV TASDIQLANDI":
+
+        await callback.answer(
+        "⚠️ Bu to‘lov avval tasdiqlangan!",
+        show_alert=True
+    )
+
+    return
+
     user["status"] = "TOLOV TASDIQLANDI"
 
     telegram_user = user["telegram_user"]
@@ -1252,6 +1419,90 @@ Iltimos chekni qayta yuboring.
         "Bekor qilindi!"
     )
 
+
+# ===== WITHDRAW ACCEPT =====
+
+@dp.callback_query(
+    lambda c:
+    c.data.startswith(
+        "withdraw_accept_"
+    )
+)
+async def withdraw_accept(
+    callback: types.CallbackQuery
+):
+
+    if callback.from_user.id not in ADMIN_IDS:
+
+        return
+
+    registration_id = callback.data.replace(
+        "withdraw_accept_",
+        ""
+    )
+
+    load_users()
+
+    if registration_id not in users_data:
+
+        return
+
+    user = users_data[registration_id]
+
+    balance = int(
+        user.get(
+            "balance",
+            0
+        )
+    )
+
+    if balance < 30000:
+
+        await callback.answer(
+            "❌ Balans yetarli emas.",
+            show_alert=True
+        )
+
+        return
+
+    new_balance = balance - 30000
+
+    user["balance"] = new_balance
+
+    try:
+
+        await asyncio.to_thread(
+            requests.post,
+            SCRIPT_URL,
+            json={
+                "action": "withdraw_done",
+                "telegram_user": user["telegram_user"],
+                "balance": new_balance
+            },
+            timeout=10
+        )
+
+    except Exception as error:
+        print(error)
+
+    await bot.send_message(
+        user["telegram_user"],
+        f"""
+✅ Pul yechish tasdiqlandi.
+
+💰 30 000 so‘m
+kartangizga tashlandi.
+
+🏦 Qolgan balans:
+{new_balance} so‘m
+"""
+    )
+
+    await callback.message.edit_reply_markup()
+
+    await callback.answer(
+        "Tasdiqlandi!"
+    )
 
 # ===== MAIN =====
 

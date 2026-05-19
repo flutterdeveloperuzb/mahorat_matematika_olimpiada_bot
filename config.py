@@ -11,4 +11,4 @@ CARD_NUMBER = "9860 0401 1490 7971"
 
 PAYMENT = "50 000 so'm"
 
-SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhk9usN2D6CDBxVSqB_e7WRL_N58bSEmAvZ59e6LYgvSijWcWyCiO8JDg4cdR6J1jV/exec"
+SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXwDSJaRpcFw3gSvbXaJTWW6SXAuzKyc01rXpejBG3BxJ1zSn8HR8LSs2bO6TnRrvJ/exec"

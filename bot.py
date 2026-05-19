@@ -1034,7 +1034,7 @@ async def get_maktab(
     data = await state.get_data()
 
     registration_id = (
-        f"MM-{registration_counter:03d}"
+        f"MM-{registration_counter:04d}"
     )
 
     registration_counter += 1

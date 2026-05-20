@@ -4,7 +4,7 @@ CHANNEL = "@mahorat_maktabi_namangan"
 
 ADMIN_IDS = [
     308239496,
-    1557783008
+    8664616471
 ]
 
 CARD_NUMBER = "9860 0401 1490 7971"

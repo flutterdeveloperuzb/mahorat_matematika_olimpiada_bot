@@ -139,7 +139,7 @@ async def contact_admin(
 Bilolxon
 
 📞 Telefon:
-+998913515450
++998771814443
 """
     )
 

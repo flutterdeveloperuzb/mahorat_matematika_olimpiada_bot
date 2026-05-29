@@ -1202,6 +1202,7 @@ async def receive_check(
     )
 
     await state.clear()
+
 # ===== ACCEPT =====
 
 @dp.callback_query(
@@ -1243,7 +1244,7 @@ async def accept_payment(
         show_alert=True
     )
 
-    return
+        return
 
     user["status"] = "TOLOV TASDIQLANDI"
 
